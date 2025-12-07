@@ -11,30 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout project source
-      - name: Checkout code
-        uses: actions/checkout@v4
+    # Checkout source code
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      # Install JDK 17
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
+    # Install JDK 17
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
 
-      # Run Maven tests (JUnit 5)
-      - name: Run Maven Tests
-        run: mvn -B clean test
+    # Run unit tests + JaCoCo
+    - name: Run Maven tests
+      run: mvn -B clean test
 
-      # Run JaCoCo Coverage
-      - name: Generate JaCoCo Coverage Report
-        run: mvn jacoco:report
+    # Generate JaCoCo report
+    - name: JaCoCo Report
+      run: mvn jacoco:report
 
-      # Run PIT Mutation Testing
-      - name: Run PIT Mutation Coverage
-        run: mvn -B pitest:mutationCoverage
-
-      # Optional: Update dependency graph for GitHub
-      - name: Update dependency graph
-        uses: advanced-security/maven-dependency-submission-action@v3
+    # Run PIT mutation testing
+    - name: Run PIT Mutation Tests
+      run: mvn -B pitest:mutationCoverage
