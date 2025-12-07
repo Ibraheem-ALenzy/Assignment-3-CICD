@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
@@ -16,6 +17,7 @@
     </properties>
 
     <dependencies>
+
         <!-- JUnit 5 for testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -30,16 +32,77 @@
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- REQUIRED: PIT support for JUnit 5 (Fixes your error) -->
+        <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+
             <!-- Maven Surefire Plugin to run tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
             </plugin>
+
+            <!-- JaCoCo Plugin for line and branch coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.11</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- PIT Mutation Testing Plugin -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.15.0</version>
+                <configuration>
+                    <!-- Only mutate your main classes -->
+                    <targetClasses>
+                        <param>StudentService</param>
+                        <param>Utils</param>
+                    </targetClasses>
+
+                    <!-- Run any test class ending in *Test -->
+                    <targetTests>
+                        <param>*Test</param>
+                    </targetTests>
+
+                    <mutators>
+                        <mutator>DEFAULTS</mutator>
+                    </mutators>
+
+                    <!-- JUnit 5 provider -->
+                    <testPlugin>
+                        <param>junit5</param>
+                    </testPlugin>
+
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

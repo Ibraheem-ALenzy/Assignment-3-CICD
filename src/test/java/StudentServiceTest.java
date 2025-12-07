@@ -27,8 +27,27 @@ class StudentServiceTest {
         assertEquals(3.5, avg, 0.001);
     }
 
-    // Intentionally leave out tests for:
-    // - removeStudentByName
-    // - behavior with empty student list
-    // - Utils methods
+    @Test
+    void testRemoveStudentByName_success() {
+        StudentService service = new StudentService();
+        service.addStudent(new Student("Alice", 20, 3.5));
+
+        boolean removed = service.removeStudentByName("Alice");
+
+        assertTrue(removed);
+
+        // After removing the only student, the list is empty.
+        // getTopStudent() currently throws IndexOutOfBoundsException.
+        assertThrows(IndexOutOfBoundsException.class, () -> service.getTopStudent());
+    }
+
+    @Test
+    void testRemoveStudentByName_notFound() {
+        StudentService service = new StudentService();
+        service.addStudent(new Student("Bob", 22, 3.9));
+
+        boolean removed = service.removeStudentByName("Alice");
+
+        assertFalse(removed);
+    }
 }

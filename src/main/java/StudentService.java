@@ -16,7 +16,7 @@ public class StudentService {
     public Student getTopStudent() {
         Student top = students.get(0);  // Potential IndexOutOfBoundsException
         for (Student s : students) {
-            if (s.getGpa() < top.getGpa()) {
+            if (s.getGpa() > top.getGpa()) {
                 top = s;
             }
         }
@@ -37,11 +37,14 @@ public class StudentService {
     }
 
     // Unused method (code smell)
-    public void removeStudentByName(String name) {
-        for (Student s : students) {
-            if (s.getName().equals(name)) {
-                students.remove(s);  // Bug: ConcurrentModificationException possible
-            }
+    public boolean removeStudentByName(String name) {
+    for (Student s : students) {
+        if (s.getName().equals(name)) {
+            students.remove(s);
+            return true;
         }
     }
+    return false;
+}
+
 }
